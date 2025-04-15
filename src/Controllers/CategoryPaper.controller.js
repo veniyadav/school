@@ -31,7 +31,7 @@ export const getCategoryPaper = asyncHandler(async (req, res) => {
 
 export const updatecategory = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { name, description, time } = req.body;
+    const { name, description, time, isPublish } = req.body;
   
     const categoryPaper = await CategoryPaper.findById(id);
     if (!categoryPaper) {
@@ -41,7 +41,11 @@ export const updatecategory = asyncHandler(async (req, res) => {
     categoryPaper.name = name || categoryPaper.name;
     categoryPaper.description = description || categoryPaper.description;
     categoryPaper.time = time || categoryPaper.time;
-  
+
+    if (typeof isPublish !== "undefined") {
+      categoryPaper.isPublish = isPublish === "true" || isPublish === true;
+    }
+      
     await categoryPaper.save();
   
     return res.status(200).json(
@@ -52,6 +56,7 @@ export const updatecategory = asyncHandler(async (req, res) => {
   // Delete CategoryPaper
   export const deletecategory = asyncHandler(async (req, res) => {
     const { id } = req.params;
+    
   
     const categoryPaper = await CategoryPaper.findById(id);
     if (!categoryPaper) {
